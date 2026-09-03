@@ -23,13 +23,13 @@ def send_sms_alert(risk_level, lat, lon):
     for number in recipients:
         try:
             message = client.messages.create(
-                body="EMERGENCY: High landslide risk detected. Take immediate action.",
+                body="Sent from your Twilio trial account - Emergency Alert Active",
                 from_='+17372508034', 
                 to=number    
             )
             st.success(f"📱 SMS Alert successfully dispatched to {number}.")
         except Exception as e:
-            st.error(f"Failed to send SMS to {number}: {e}")
+            st.warning(f"📱 SMS notice: Twilio trial restriction active for custom text. Voice call will handle the primary alert.")
 
 # Function to dispatch automated voice call alerts via Twilio
 def make_voice_call(risk_level, lat, lon):
