@@ -4,7 +4,7 @@ from sklearn.ensemble import RandomForestClassifier
 import folium
 from streamlit_folium import st_folium
 from datetime import datetime
-from twilio.rest import Client
+import requests
 
 # Configure as an official department portal
 st.set_page_config(page_title="Disaster Management Authority Portal", layout="wide")
@@ -12,44 +12,33 @@ st.set_page_config(page_title="Disaster Management Authority Portal", layout="wi
 st.title("🏛️ District Disaster Management Authority")
 st.markdown("**Early Warning & Landslide Risk Monitoring System**")
 
-# Function to dispatch actual SMS alerts via Twilio
-def send_sms_alert(risk_level, lat, lon):
-    account_sid = 'AC0dc40fc142c7401b290f114ae0a87c0f'
-    auth_token = '728ef2de4348f6ef19784f75ea893856'
-    client = Client(account_sid, auth_token)
-
-    recipients = ['+918714304429']
-
-    for number in recipients:
-        try:
-            message = client.messages.create(
-                body="Sent from your Twilio trial account - Emergency Alert Active",
-                from_='+17372508034', 
-                to=number    
-            )
-            st.success(f"📱 SMS Alert successfully dispatched to {number}.")
-        except Exception as e:
-            st.warning(f"📱 SMS notice: Twilio trial restriction active for custom text.")
-
-# Function to dispatch automated voice call alerts via Twilio
-def make_voice_call(risk_level, lat, lon):
-    account_sid = 'AC0dc40fc142c7401b290f114ae0a87c0f'
-    auth_token = '728ef2de4348f6ef19784f75ea893856'
-    client = Client(account_sid, auth_token)
-
-    recipients = ['+918714304429']
-
-    for number in recipients:
-        try:
-            # Using Twilio's standard demo URL to bypass trial inline-twiml restrictions
-            call = client.calls.create(
-                url='http://demo.twilio.com/welcome/voice/',
-                to=number,
-                from_='+17372508034'
-            )
-            st.success(f"📞 Voice call successfully placed to {number}.")
-        except Exception as e:
-            st.error(f"Failed to place call to {number}: {e}")
+# Function to dispatch SMS alert via MSG91
+def send_msg91_sms_alert(risk_level, lat, lon):
+    url = "https://control.msg91.com/api/v5/sms/"
+    
+    recipients = ["918714304429"]
+    mobiles_str = ",".join(recipients)
+    
+    payload = {
+        "authkey": "466583AyT3dshv9h6a993271P1",
+        "mobiles": mobiles_str,
+        "message": f"EMERGENCY: High landslide risk at coordinates {lat}, {lon}. Take immediate action.",
+        "sender": "DISAS",
+        "route": "4"
+    }
+    
+    headers = {
+        "content-type": "application/json"
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code == 200:
+            st.success("📱 SMS Alert successfully dispatched via MSG91.")
+        else:
+            st.error(f"MSG91 Error: {response.text}")
+    except Exception as e:
+        st.error(f"Failed to send SMS: {e}")
 
 # 1. Process the data & Train Model
 @st.cache_resource
@@ -114,10 +103,9 @@ with left_col:
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.info(f"**DISPATCHED AT {current_time}:**\n\n{alert_msg}", icon="📡")
         
-        # Trigger both SMS and Voice calls if the risk is High
+        # Trigger the MSG91 SMS alert if the risk is High
         if prediction == "High":
-            send_sms_alert(prediction, lat, lon)
-            make_voice_call(prediction, lat, lon)
+            send_msg91_sms_alert(prediction, lat, lon)
 
 with right_col:
     st.subheader("3. Geographic Monitoring Map")
