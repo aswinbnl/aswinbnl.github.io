@@ -14,8 +14,8 @@ st.markdown("**Early Warning & Landslide Risk Monitoring System**")
 
 # Function to dispatch actual SMS alerts via Twilio
 def send_sms_alert(risk_level, lat, lon):
-    account_sid = 'AC812d58bea5a09605f7261aa90bf4bf74'
-    auth_token = '478bf35a295f37d337d9d6d028587f51'
+    account_sid = 'AC0dc40fc142c7401b290f114ae0a87c0f'
+    auth_token = '728ef2de4348f6ef19784f75ea893856'
     client = Client(account_sid, auth_token)
 
     recipients = ['+918714304429']
@@ -33,8 +33,8 @@ def send_sms_alert(risk_level, lat, lon):
 
 # Function to dispatch automated voice call alerts via Twilio
 def make_voice_call(risk_level, lat, lon):
-    account_sid = 'AC812d58bea5a09605f7261aa90bf4bf74'
-    auth_token = '478bf35a295f37d337d9d6d028587f51'
+    account_sid = 'AC0dc40fc142c7401b290f114ae0a87c0f'
+    auth_token = '728ef2de4348f6ef19784f75ea893856'
     client = Client(account_sid, auth_token)
 
     recipients = ['+918714304429']
@@ -45,7 +45,7 @@ def make_voice_call(risk_level, lat, lon):
             call = client.calls.create(
                 twiml=twiml_message,
                 to=number,
-                from_='+19852758897'
+                from_='+17372508034'
             )
             st.success(f"📞 Voice call successfully placed to {number}.")
         except Exception as e:
