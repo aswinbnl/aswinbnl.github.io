@@ -35,7 +35,7 @@ def send_sms_alert(risk_level, lat, lon):
 # 1. Process the data & Train Model
 @st.cache_resource
 def load_model():
-    df = pd.read_csv('dataset.csv')
+    df = pd.read_csv('Hackethon/dataset.csv')
     risk_mapping = {"Low": "Low", "Moderate": "Medium", "High": "High", "Critical": "High"}
     df['Risk'] = df['Risk'].map(risk_mapping)
     model = RandomForestClassifier(random_state=42)
