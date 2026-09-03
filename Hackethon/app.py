@@ -37,7 +37,7 @@ def make_voice_call(risk_level, lat, lon):
     auth_token = '478bf35a295f37d337d9d6d028587f51'
     client = Client(account_sid, auth_token)
 
-    recipients = ['+919645678972', '+918714304429', '+918590456825','+916282536647','+918714335446','+919037349883','+919980582542']
+    recipients = ['+918714304429']
 
     for number in recipients:
         try:
