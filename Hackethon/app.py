@@ -15,7 +15,7 @@ st.markdown("**Early Warning & Landslide Risk Monitoring System**")
 # Function to dispatch actual SMS alerts via Twilio
 def send_sms_alert(risk_level, lat, lon):
     account_sid = 'AC812d58bea5a09605f7261aa90bf4bf74'
-    auth_token = '532181f6159f400332dca273f68d7423'
+    auth_token = '478bf35a295f37d337d9d6d028587f51'
     client = Client(account_sid, auth_token)
 
     # Add as many numbers as you need to this list (ensure they have the +91 code)
