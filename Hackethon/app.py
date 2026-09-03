@@ -18,7 +18,6 @@ def send_sms_alert(risk_level, lat, lon):
     auth_token = '478bf35a295f37d337d9d6d028587f51'
     client = Client(account_sid, auth_token)
 
-    # Add as many numbers as you need to this list (ensure they have the +91 code)
     recipients = ['+919645678972', '+918714304429', '+918590456825','+916282536647','+918714335446','+919037349883','+919980582542']
 
     for number in recipients:
@@ -31,6 +30,26 @@ def send_sms_alert(risk_level, lat, lon):
             st.success(f"📱 SMS Alert successfully dispatched to {number}.")
         except Exception as e:
             st.error(f"Failed to send SMS to {number}: {e}")
+
+# Function to dispatch automated voice call alerts via Twilio
+def make_voice_call(risk_level, lat, lon):
+    account_sid = 'AC812d58bea5a09605f7261aa90bf4bf74'
+    auth_token = '478bf35a295f37d337d9d6d028587f51'
+    client = Client(account_sid, auth_token)
+
+    recipients = ['+919645678972', '+918714304429', '+918590456825','+916282536647','+918714335446','+919037349883','+919980582542']
+
+    for number in recipients:
+        try:
+            twiml_message = f"<Response><Say>Emergency alert! {risk_level} landslide risk detected at coordinates {lat}, {lon}. Immediate action required.</Say></Response>"
+            call = client.calls.create(
+                twiml=twiml_message,
+                to=number,
+                from_='+19852758897'
+            )
+            st.success(f"📞 Voice call successfully placed to {number}.")
+        except Exception as e:
+            st.error(f"Failed to place call to {number}: {e}")
 
 # 1. Process the data & Train Model
 @st.cache_resource
@@ -74,7 +93,6 @@ left_col, right_col = st.columns([1, 2])
 with left_col:
     st.subheader("2. Departmental Alert Status")
     
-    # 5. Generate official warning notifications
     if prediction == "High":
         st.error("🔴 **CRITICAL RISK LEVEL DETECTED**")
         st.write("Conditions exceed safe thresholds. Immediate civic intervention required.")
@@ -96,9 +114,10 @@ with left_col:
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         st.info(f"**DISPATCHED AT {current_time}:**\n\n{alert_msg}", icon="📡")
         
-        # Trigger the SMS function only if the risk is High
+        # Trigger both SMS and Voice calls if the risk is High
         if prediction == "High":
             send_sms_alert(prediction, lat, lon)
+            make_voice_call(prediction, lat, lon)
 
 with right_col:
     st.subheader("3. Geographic Monitoring Map")
