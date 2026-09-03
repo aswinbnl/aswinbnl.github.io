@@ -19,7 +19,7 @@ def send_sms_alert(risk_level, lat, lon):
     client = Client(account_sid, auth_token)
 
     # Add as many numbers as you need to this list (ensure they have the +91 code)
-    recipients = ['+919645678972', '+918714304429', '+918590456825','+916282536647','+918714335446','+919037349883']
+    recipients = ['+919645678972', '+918714304429', '+918590456825','+916282536647','+918714335446','+919037349883','+919980582542']
 
     for number in recipients:
         try:
