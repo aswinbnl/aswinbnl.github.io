@@ -23,7 +23,7 @@ def send_sms_alert(risk_level, lat, lon):
     for number in recipients:
         try:
             message = client.messages.create(
-                body=f"🚨 EMERGENCY ALERT: {risk_level} landslide risk detected at {lat}, {lon}. Immediate action required.",
+                body="EMERGENCY: High landslide risk detected. Take immediate action.",
                 from_='+17372508034', 
                 to=number    
             )
@@ -41,7 +41,7 @@ def make_voice_call(risk_level, lat, lon):
 
     for number in recipients:
         try:
-            twiml_message = f"<Response><Say>Emergency alert! {risk_level} landslide risk detected at coordinates {lat}, {lon}. Immediate action required.</Say></Response>"
+            twiml_message = "<Response><Say>Emergency alert. High landslide risk detected. Immediate action required.</Say></Response>"
             call = client.calls.create(
                 twiml=twiml_message,
                 to=number,
