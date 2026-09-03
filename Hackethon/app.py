@@ -29,7 +29,7 @@ def send_sms_alert(risk_level, lat, lon):
             )
             st.success(f"📱 SMS Alert successfully dispatched to {number}.")
         except Exception as e:
-            st.warning(f"📱 SMS notice: Twilio trial restriction active for custom text. Voice call will handle the primary alert.")
+            st.warning(f"📱 SMS notice: Twilio trial restriction active for custom text.")
 
 # Function to dispatch automated voice call alerts via Twilio
 def make_voice_call(risk_level, lat, lon):
@@ -41,9 +41,9 @@ def make_voice_call(risk_level, lat, lon):
 
     for number in recipients:
         try:
-            twiml_message = "<Response><Say>Emergency alert. High landslide risk detected. Immediate action required.</Say></Response>"
+            # Using Twilio's standard demo URL to bypass trial inline-twiml restrictions
             call = client.calls.create(
-                twiml=twiml_message,
+                url='http://demo.twilio.com/welcome/voice/',
                 to=number,
                 from_='+17372508034'
             )
