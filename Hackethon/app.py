@@ -9,7 +9,7 @@ from twilio.rest import Client
 # Configure as an official department portal
 st.set_page_config(page_title="Disaster Management Authority Portal", layout="wide")
 
-st.title("🏛️ District Disaster Management Authority")
+st.title("🏛️Disaster Management Authority")
 st.markdown("**Early Warning & Landslide Risk Monitoring System**")
 
 # Function to dispatch SMS alerts via Twilio
